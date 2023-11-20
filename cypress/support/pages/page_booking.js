@@ -3,8 +3,8 @@ import 'cypress-iframe';
 const dayjs = require("dayjs")
 
 
-//const url = 'https://staging.bookings.vacayou.com/vacayou/8'
-const url = 'https://develop.bookings.vacayou.com/vacayou/5'
+const url = 'https://staging.bookings.vacayou.com/vacayou/8'
+//const url = 'https://develop.bookings.vacayou.com/vacayou/5'
 const checkin_txtbox = '#check-in-input'
 const checkout_txtbox = '#check-out-input'
 const checkavailability_btn = '#check-availability-button'
@@ -22,8 +22,8 @@ const roomchildfirstname_txtbox = (room, child) => `#room-${room}-child-${child}
 const selectroom = '//div[@id="room1"]/following::button[@id="select-room-9865864"][1]'
 const customizecontinue_btn = '#customize-continue-button'
 const customizeexperience_text = '//h1[text()="Customize Your Experience"]'
-//const select_room_btn = (roomno) => `//div[@id="room${roomno}"]/following::button[contains(@id,"select-room")]`
-const select_room_btn = (roomno) => `//div[@id="roomPanel-${roomno}"]/following::button[contains(@id,"select-room")]`
+const select_room_btn = (roomno) => `//div[@id="room${roomno}"]/following::button[contains(@id,"select-room")]`
+//const select_room_btn = (roomno) => `//div[@id="roomPanel-${roomno}"]/following::button[contains(@id,"select-room")]`
 const remove_room_btn = '//div[@id="room1"]/following::button[contains(@id,"remove-room")]'
 
 
@@ -94,7 +94,7 @@ export class Booking {
     }
 
     clickCheckAvailabilityButton() {
-       // cy.wait(20000)
+        // cy.wait(20000)
         cy.get(checkavailability_btn).click()
     }
 
@@ -248,19 +248,22 @@ export class Booking {
         //     cy.wrap(iframeBody).find(cardnumber_txtbox).type('4111111111111111');
         //   });
 
-
-        // cy.iframe(payment_iframe).within(() => {
-        //     cy.get(cardnumber_txtbox).type('4111111111111111')
-        //     cy.get(cardexpiration_txtbox).type('0325')
-        //     cy.get(cardcvc_txtbox).type('111')
-        // })
+        /// Working for all the fields
+        cy.iframe(payment_iframe).within(() => {
+            cy.get(cardnumber_txtbox).type('4111111111111111')
+            cy.get(cardexpiration_txtbox).type('0325')
+            cy.get(cardcvc_txtbox).type('111')
+        })
 
         // cy.frameLoaded(payment_iframe)
         // cy.iframe(payment_iframe).find(cardnumber_txtbox).type('4111111111111111')
 
-        const iframe = cy.get(payment_iframe).its('0.contentDocument.body').should('be.visible').and('not.be.empty').then(cy.wrap)
-        iframe.get(cardnumber_txtbox).type('4111111111111111')
 
+        ///Working only for one fields
+        // const iframe = cy.get(payment_iframe).its('0.contentDocument.body').should('be.visible').and('not.be.empty').then(cy.wrap)
+        // iframe.find(cardnumber_txtbox).type('4111111111111111')
+        // iframe.find(cardexpiration_txtbox).type('0428');
+        // iframe.find(cardcvc_txtbox).type('111');
 
     }
 
