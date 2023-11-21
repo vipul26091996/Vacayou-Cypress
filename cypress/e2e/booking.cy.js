@@ -35,7 +35,8 @@ describe('Hotel Booking', () => {
         booking.enterGuestInformation()
         booking.clickProceedToPayment()
         booking.enterCardDetails()
-        // booking.clickPayandBookNow()
+        booking.clickPayandBookNow()
+        booking.verifyBooking()
     })
 
     it('Check not more than 5 rooms can booked', function () {

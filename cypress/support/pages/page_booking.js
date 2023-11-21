@@ -270,4 +270,11 @@ export class Booking {
     clickPayandBookNow() {
         cy.get(payandbook_btn).click()
     }
+
+    verifyBooking()
+    {
+        cy.xpath('//h1[text()="Thank you for your booking!"]').invoke('text').then((acttext)=>{
+        expect(acttext.trim()).to.equal('Thank you for your booking!')
+        })
+    }
 }
