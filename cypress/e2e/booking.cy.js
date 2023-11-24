@@ -9,7 +9,7 @@ describe('Hotel Booking', () => {
         booking.visit()
     })
 
-    it.skip('Check Availability', function () {
+    it.only('Check Availability', function () {
         booking.clickCheckIn()
         booking.enterCheckInDate()
         // booking.selectCheckInDate()
@@ -38,11 +38,11 @@ describe('Hotel Booking', () => {
         booking.verifyBooking()
     })
 
-    customIt('Pass it Block', () => {
+    it('Pass it Block', () => {
         cy.log('Pass it block')
     })
 
-    customIt('Check not more than 5 rooms can booked', function () {
+    it('Check not more than 5 rooms can booked', function () {
         booking.clickGuest()
         booking.selectAdultGuest()
         throw new Error('This test intentionally fails')
