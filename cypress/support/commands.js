@@ -27,7 +27,3 @@
 ///<reference types ="cypress-xpath"/>
 
 import 'cypress-iframe';
-
-// Cypress.Commands.add('iframe',{prevSubject:'element'},$iframe=>{
-//     return cy.wrap($iframe).should(iframe=>cy.wrap(iframe.contents().find('body')));
-// });

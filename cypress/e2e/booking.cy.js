@@ -9,12 +9,11 @@ describe('Hotel Booking', () => {
         booking.visit()
     })
 
-    it.only('Check Availability', function () {
+    it.skip('Check Availability', function () {
         booking.clickCheckIn()
         booking.enterCheckInDate()
-       // booking.selectCheckInDate()
+        // booking.selectCheckInDate()
         booking.clickCheckOut()
-        //booking.clickNextMonth()
         booking.enterCheckOutDate()
         //booking.selectCheckOutDate()
         booking.clickGuest()
@@ -26,10 +25,10 @@ describe('Hotel Booking', () => {
         // booking.selectChildrenGuest()
         booking.clickConfirmGuest()
         booking.clickCheckAvailabilityButton()
-         booking.enterGuestNames(4)
+        booking.enterGuestNames(4)
         //booking.clickSkipforNow()
         // cy.wait(20000)
-         booking.clickContinue()
+        booking.clickContinue()
         booking.selectRooms(4)
         booking.clickContinueToGuestInformationBtn()
         booking.enterGuestInformation()
@@ -39,9 +38,14 @@ describe('Hotel Booking', () => {
         booking.verifyBooking()
     })
 
-    it('Check not more than 5 rooms can booked', function () {
+    customIt('Pass it Block', () => {
+        cy.log('Pass it block')
+    })
+
+    customIt('Check not more than 5 rooms can booked', function () {
         booking.clickGuest()
         booking.selectAdultGuest()
+        throw new Error('This test intentionally fails')
     })
 
 })

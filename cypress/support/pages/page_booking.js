@@ -22,8 +22,8 @@ const roomchildfirstname_txtbox = (room, child) => `#room-${room}-child-${child}
 const selectroom = '//div[@id="room1"]/following::button[@id="select-room-9865864"][1]'
 const customizecontinue_btn = '#customize-continue-button'
 const customizeexperience_text = '//h1[text()="Customize Your Experience"]'
-const select_room_btn = (roomno) => `//div[@id="room${roomno}"]/following::button[contains(@id,"select-room")]`
-//const select_room_btn = (roomno) => `//div[@id="roomPanel-${roomno}"]/following::button[contains(@id,"select-room")]`
+//const select_room_btn = (roomno) => `//div[@id="room${roomno}"]/following::button[contains(@id,"select-room")]`
+const select_room_btn = (roomno) => `//div[@id="roomPanel-${roomno}"]/following::button[contains(@id,"select-room")]`
 const remove_room_btn = '//div[@id="room1"]/following::button[contains(@id,"remove-room")]'
 
 
@@ -271,10 +271,9 @@ export class Booking {
         cy.get(payandbook_btn).click()
     }
 
-    verifyBooking()
-    {
-        cy.xpath('//h1[text()="Thank you for your booking!"]').invoke('text').then((acttext)=>{
-        expect(acttext.trim()).to.equal('Thank you for your booking!')
+    verifyBooking() {
+        cy.xpath('//h1[text()="Thank you for your booking!"]').invoke('text').then((acttext) => {
+            expect(acttext.trim()).to.equal('Thank you for your booking!')
         })
     }
 }
