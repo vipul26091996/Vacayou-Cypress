@@ -28,6 +28,7 @@ const remove_room_btn = '//div[@id="room1"]/following::button[contains(@id,"remo
 
 
 
+const guestinformation_text = '//h1[text()="Guest Information"]'
 const guestfirstname_txtbox = '#primary-first-name'
 const guestlastname_txtbox = '#primary-last-name'
 const gueststreetaddress_txtbox = '#primary-street-addr-1'
@@ -45,6 +46,9 @@ const guestinsurance_chkbox = '#insurance-checkbox'
 const guestallianz_chkbox = '#allianz-checkbox'
 const proceedtopayment_btn = '#guest-information-continue'
 
+
+
+const payment_text = '//h1[text()="Payment"]'
 const cardnumber_txtbox = '#Field-numberInput'
 const cardexpiration_txtbox = '#Field-expiryInput'
 const cardcvc_txtbox = '#Field-cvcInput'
@@ -52,9 +56,11 @@ const cardcountry_ddown = '#Field-countryInput'
 const payandbook_btn = '#pay-and-book-button'
 const payment_iframe = 'iframe[title="Secure payment input frame"]'
 
+const successfulbooking_text = '//h1[text()="Your Booking Was Successful!"]'
+
 export class Booking {
 
-    visit() {
+    visitURL() {
         cy.visit(url)
     }
 
@@ -94,8 +100,12 @@ export class Booking {
     }
 
     clickCheckAvailabilityButton() {
-        // cy.wait(20000)
         cy.get(checkavailability_btn).click()
+    }
+
+    verifyAvailability() {
+        //cy.xpath(customizeexperience_text).should('eql', 'Customize Your Experience')
+        cy.xpath(customizeexperience_text).should('have.text', 'Customize Your Experience')
     }
 
     clickGuest() {
@@ -126,7 +136,6 @@ export class Booking {
     }
 
     verifyTotalGuests(roomnumber) {
-        // cy.wait(5000)
         let totalGuest = 0
         for (let i = 1; i <= roomnumber; i++) {
             cy.get(roomadultguest_txtbox(i)).invoke('val').then((value) => {
@@ -148,7 +157,6 @@ export class Booking {
             for (let i = 1; i <= roomnumber; i++) {
 
                 for (let j = 1; j <= 5; j++) {
-                    //cy.get(roomadultfirstname(i, j)).should('exist').type('abc')
                     if ($body.find(roomadultfirstname_txtbox(i, j)).length) {
                         cy.get(roomadultfirstname_txtbox(i, j)).type('Adult ' + j)
                     }
@@ -172,9 +180,6 @@ export class Booking {
     }
 
     selectRooms(roomnumber) {
-        // for (let i = 1; i <= number; i++) {
-        //     cy.xpath(selectroom).click()
-        // }
         for (let i = 1; i <= roomnumber; i++) {
             cy.xpath(select_room_btn(i)).first().click()
         }
@@ -184,10 +189,14 @@ export class Booking {
         cy.get(customizecontinue_btn).click()
     }
 
+    verifyCustomizeExperience() {
+        cy.xpath(guestinformation_text).should('have.text', 'Guest Information')
+    }
+
     enterGuestInformation() {
         cy.get(guestfirstname_txtbox).type('Test')
         cy.get(guestlastname_txtbox).type('Singh')
-        cy.get(gueststreetaddress_txtbox).type('Street Address 1')
+        cy.get(gueststreetaddress_txtbox).type('Street Address')
         cy.get(guestcity_txtbox).type('City')
         cy.get(gueststate_ddown).type('Guam').type('{downarrow}').type('{enter}')
         cy.get(guestzipcode_txtbox).type('100001')
@@ -213,13 +222,17 @@ export class Booking {
                 }
             }
         })
-        cy.get(guestinsurance_chkbox).click()
+        //cy.get(guestinsurance_chkbox).click()
         // cy.get(guestallianz_chkbox).click()
         cy.get(tandc_chkbox).click()
     }
 
     clickProceedToPayment() {
         cy.get(proceedtopayment_btn).click()
+    }
+
+    verifyGuestInformation() {
+        cy.xpath(payment_text).should('have.text', 'Payment')
     }
 
     enterCardDetails() {
@@ -272,8 +285,8 @@ export class Booking {
     }
 
     verifyBooking() {
-        cy.xpath('//h1[text()="Thank you for your booking!"]').invoke('text').then((acttext) => {
-            expect(acttext.trim()).to.equal('Thank you for your booking!')
+        cy.xpath(successfulbooking_text).invoke('text').then((acttext) => {
+            expect(acttext.trim()).to.equal('Your Booking Was Successful!')
         })
     }
 }
