@@ -22,11 +22,16 @@ const roomchildfirstname_txtbox = (room, child) => `#room-${room}-child-${child}
 const selectroom = '//div[@id="room1"]/following::button[@id="select-room-9865864"][1]'
 const customizecontinue_btn = '#customize-continue-button'
 const customizeexperience_text = '//h1[text()="Customize Your Experience"]'
-//const select_room_btn = (roomno) => `//div[@id="room${roomno}"]/following::button[contains(@id,"select-room")]`
 const select_room_btn = (roomno) => `//div[@id="roomPanel-${roomno}"]/following::button[contains(@id,"select-room")]`
 const remove_room_btn = '//div[@id="room1"]/following::button[contains(@id,"remove-room")]'
-
-
+const wellnessserviceselect_btn = '#select-service-1'
+const wellnessdate_btn = (date) => `//button[@id="select-date-${date}-btn"]`
+const wellnessaddOn_chkbox = '//input[contains(@id,"addOn-checkbox")]'
+const wellnesstechnician_ddown = '//*[text()="Any Technician"]'
+const wellnessrecipiets_btn = '//button[text()="Adult 1"]'
+const wellnesstime_btn = '//button[text()="7:00 PM - 8:00 PM"]'
+const wellnessaddtocart_btn = '#book-service-1'
+const wellnesstechnician_name = '//li[text()="Geoffrey James"]'
 
 const guestinformation_text = '//h1[text()="Guest Information"]'
 const guestfirstname_txtbox = '#primary-first-name'
@@ -39,6 +44,8 @@ const guestcountry_ddown = '#country-information-input'
 const guestemailaddress_txtbox = '#primary-email-address'
 const guestphonenumber_txtbox = '//input[@name="primaryInfo.phone"]'
 const roomadultlastname_txtbox = (room, adult) => `#room-${room}-adult-${adult}-last-name`
+const roomchildlastname_txtbox = (room, child) => `#room-${room}-child-${child}-last-name`
+const roomchildbirthdate_txtbox = (room, child) => `#room-${room}-child-${child}-birthdate`
 const roomadultcountry_ddown = '#room-2-adult-2-country'
 const tandc_chkbox = '#terms-and-conditions-checkbox'
 const guestspecialrequest_txtarea = '#notes-requests'
@@ -56,7 +63,7 @@ const cardcountry_ddown = '#Field-countryInput'
 const payandbook_btn = '#pay-and-book-button'
 const payment_iframe = 'iframe[title="Secure payment input frame"]'
 
-const successfulbooking_text = '//h1[text()="Your Booking Was Successful!"]'
+const successfulbooking_text = '//h1[text()="Thank you for your booking!" or text()="Your Booking Was Successful!"]'
 
 export class Booking {
 
@@ -75,8 +82,8 @@ export class Booking {
         cy.xpath(checkinout_date(checkinMonth, checkinYear, checkinDate)).click()
     }
 
-    selectCheckOutDate() {
-        const nextDate = dayjs().add(1, 'day')
+    selectCheckOutDate(night) {
+        const nextDate = dayjs().add(night, 'day')
         const checkoutYear = nextDate.format("YYYY")
         const checkoutMonth = nextDate.format('MMMM')
         const checkoutDate = nextDate.format('D')
@@ -116,12 +123,12 @@ export class Booking {
         cy.get(rooms_txtbox).type('2')
     }
 
-    selectAdultGuest() {
-        // cy.get(roomadultguest_txtbox(1)).clear().type('6')
+    selectAdultGuest(roomno, guestcount) {
+        cy.get(roomadultguest_txtbox(roomno)).clear().type(guestcount)
     }
 
-    selectChildrenGuest() {
-        //cy.get(roomchildrenguest_txtbox(1)).clear().type('0')
+    selectChildrenGuest(roomno, guestcount) {
+        cy.get(roomchildrenguest_txtbox(roomno)).clear().type(guestcount)
     }
 
     clickConfirmGuest() {
@@ -129,7 +136,7 @@ export class Booking {
     }
 
     increaseRooms(roomnumber) {
-        cy.get(rooms_txtbox).click()
+        //cy.get(rooms_txtbox).click()
         for (let i = 1; i < roomnumber; i++) {
             cy.get(rooms_txtbox).type('{uparrow}', { force: true }).trigger('input')
         }
@@ -193,6 +200,20 @@ export class Booking {
         cy.xpath(guestinformation_text).should('have.text', 'Guest Information')
     }
 
+    addWellnessService() {
+        cy.get(wellnessserviceselect_btn).click()
+        const wellnessdate = dayjs().format('MM/DD')
+        cy.xpath(wellnessdate_btn(wellnessdate)).click()
+        cy.xpath(wellnessaddOn_chkbox).each(($chkbox) => {
+            cy.wrap($chkbox).check({ force: true })
+        })
+        cy.xpath(wellnesstechnician_ddown).click()
+        cy.xpath(wellnesstechnician_name).click()
+        cy.xpath(wellnessrecipiets_btn).click()
+        cy.xpath(wellnesstime_btn).click()
+        cy.get(wellnessaddtocart_btn).click()
+    }
+
     enterGuestInformation() {
         cy.get(guestfirstname_txtbox).type('Test')
         cy.get(guestlastname_txtbox).type('Singh')
@@ -220,8 +241,32 @@ export class Booking {
                         cy.get(roomadultlastname_txtbox(i, j)).type('Singh ' + j)
                     }
                 }
+
+                for (let j = 1; j <= 5; j++) {
+                    if ($body.find(roomchildfirstname_txtbox(i, j)).length) {
+                        cy.get(roomchildfirstname_txtbox(i, j)).then(($txtbox) => {
+                            if ($txtbox.val() === '') {
+                                cy.get(roomchildfirstname_txtbox(i, j)).type('Child ' + j)
+                            }
+                        })
+                    }
+                }
+
+                for (let j = 1; j <= 5; j++) {
+                    if ($body.find(roomchildlastname_txtbox(i, j)).length) {
+                        cy.get(roomchildlastname_txtbox(i, j)).type('Kumar ' + j)
+                    }
+                }
+
+                for (let j = 1; j <= 5; j++) {
+                    if ($body.find(roomchildbirthdate_txtbox(i, j)).length) {
+                        cy.get(roomchildbirthdate_txtbox(i, j)).clear().type('12/25/2000')
+                    }
+                }
             }
         })
+
+
         //cy.get(guestinsurance_chkbox).click()
         // cy.get(guestallianz_chkbox).click()
         cy.get(tandc_chkbox).click()
@@ -286,7 +331,8 @@ export class Booking {
 
     verifyBooking() {
         cy.xpath(successfulbooking_text).invoke('text').then((acttext) => {
-            expect(acttext.trim()).to.equal('Your Booking Was Successful!')
+            const expectMessage = ['Your Booking Was Successful!', 'Thank you for your booking!']
+            expect(expectMessage).to.include(acttext.trim())
         })
     }
 }
